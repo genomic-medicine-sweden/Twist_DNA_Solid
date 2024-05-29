@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from pysam import VariantFile
 from hydra_genetics.utils.io import utils
 
@@ -16,6 +17,10 @@ def create_tsv_report(
     chrom_arm_loh = {}
     chrom_arm_amp = {}
     baseline = [0, 0]
+    new_baseline = {"cnvkit" : {"cn_neg" : {"cn" : [], "size": [], "weighted_avg" : 2.0},
+                                "cn_pos" : {"cn" : [], "size": [], "weighted_avg" : 2.0}},
+                    "gatk" : {"cn_neg" : {"cn" : [], "size": [], "weighted_avg" : 2.0},
+                              "cn_pos" : {"cn" : [], "size": [], "weighted_avg" : 2.0}}}
     polyploidy = 0
     genome_size = 0
     with open(in_chrom_arm_size) as chrom_arm_size_file:
@@ -36,7 +41,7 @@ def create_tsv_report(
     log.info(f"Opening output tsv file: {output_txt}")
     sample_name = ""
     with open(output_txt, "w") as writer:
-        writer.write("sample\tgene(s)\tchrom\tregion\tcaller\tfreq_in_db\tcopy_number")
+        writer.write("sample\tgene(s)\tchrom\tregion\tcaller\tfreq_in_db\tcopy_number\tbaseline_shifted_copy_number")
         out_additional_only.write("gene(s)\tchrom\tregion\tcaller\tfreq_in_db\tcopy_number")
         file1 = True
         for input_org_vcf in input_org_vcfs:
@@ -112,6 +117,18 @@ def create_tsv_report(
                             baseline[0] += size
                         else:
                             baseline[1] += size
+                # Estimate new baseline
+                if file1:
+                    if (
+                        BAF and BAF > normal_baf_lower_limit and BAF < normal_baf_upper_limit and
+                        size > 10000000
+                    ):
+                        if cn < 2:
+                            new_baseline[caller]["cn_neg"]["cn"].append(cn)
+                            new_baseline[caller]["cn_neg"]["size"].append(size)
+                        else:
+                            new_baseline[caller]["cn_pos"]["cn"].append(cn)
+                            new_baseline[caller]["cn_pos"]["size"].append(size)
                 # Poliploidy check
                 if file1:
                     if caller == "cnvkit":
@@ -159,8 +176,21 @@ def create_tsv_report(
                     writer.write(f"\n{samples}\t1p19q\tNA\tNA\tgatk_cnv\tNA\tNA")
                     out_additional_only.write(f"\nt1p19q\tNA\tNA\tgatk_cnv\tNA\tNA")
                     nr_writes += 1
-
             file1 = False
+
+        # Calculate new baseline
+        for caller in new_baseline:
+            for cluster in new_baseline[caller]:
+                weighted_avg = 0.0
+                if len(new_baseline[caller][cluster]["cn"]) > 0:
+                    weighted_avg = np.average(new_baseline[caller][cluster]["cn"], weights=new_baseline[caller][cluster]["size"])
+                new_baseline[caller][cluster]["weighted_avg"] = weighted_avg
+        baseline_shift = {"cnvkit" : 0.0, "gatk" : 0.0}
+        for caller in new_baseline:
+            w_avg_neg = new_baseline[caller]["cn_neg"]["weighted_avg"]
+            w_avg_pos = new_baseline[caller]["cn_pos"]["weighted_avg"]
+            if w_avg_pos - w_avg_neg > 1.0:
+                baseline_shift[caller] = 2.0 - w_avg_neg
 
         for input_vcf in input_vcfs:
             gene_variant_dict = {}
@@ -182,10 +212,12 @@ def create_tsv_report(
                 end = variant.pos + int(utils.get_annotation_data_info(variant, "SVLEN")) - 1
                 caller = utils.get_annotation_data_info(variant, "CALLER")
                 cn = utils.get_annotation_data_info(variant, "CORR_CN")
+                baseline_corrected_cn = cn + baseline_shift[caller]
                 AF = utils.get_annotation_data_info(variant, "Twist_AF")
                 if AF is None:
                     AF = 0.0
                 writer.write(f"\n{samples}\t{genes}\t{chr}\t{start}-{end}\t{caller}\t{AF:.2f}\t{cn:.2f}")
+                writer.write(f"\t{baseline_corrected_cn:.2f}")
                 counter += 1
                 for gene in genes.split(","):
                     if gene not in gene_variant_dict:
@@ -201,6 +233,7 @@ def create_tsv_report(
                             end = cnv[2]
                             new_caller = cnv[3]
                             cn = cnv[4]
+                            baseline_corrected_cn = cn + baseline_shift[new_caller]
                             AF = cnv[5]
                             if (
                                 (start >= gene_variant_dict[gene][0][1] and start <= gene_variant_dict[gene][0][2]) or
@@ -209,6 +242,7 @@ def create_tsv_report(
                                 (gene_variant_dict[gene][0][2] >= end and gene_variant_dict[gene][0][2] <= start)
                             ):
                                 writer.write(f"\n{samples}\t{gene}\t{chr}\t{start}-{end}\t{new_caller}\t{AF:.2f}\t{cn:.2f}")
+                                writer.write(f"\t{baseline_corrected_cn:.2f}")
         log.info(f"Processed {counter} variants")
 
         deletions = open(input_del)
@@ -226,7 +260,7 @@ def create_tsv_report(
             ccn = cn
             if TC > 0.0:
                 ccn = round(2 + (cn - 2) * (1/float(TC)), 2)
-            writer.write(f"\n{sample_name}\t{gene}\t{chr}\t{start}-{end}\t{caller}\t{AF}\t{ccn:.2f}")
+            writer.write(f"\n{sample_name}\t{gene}\t{chr}\t{start}-{end}\t{caller}\t{AF}\t{ccn:.2f}\t")
             out_additional_only.write(f"\n{gene}\t{chr}\t{start}-{end}\t{caller}\t{AF}\t{ccn:.2f}")
         amplifications = open(input_amp)
         header_list = next(amplifications).split("\t")
@@ -244,7 +278,7 @@ def create_tsv_report(
             if TC > 0.0:
                 ccn = round(2 + (cn - 2) * (1/float(TC)), 2)
             if ccn > amp_cn_limit:
-                writer.write(f"\n{sample_name}\t{gene}\t{chr}\t{start}-{end}\t{caller}\t{AF}\t{ccn:.2f}")
+                writer.write(f"\n{sample_name}\t{gene}\t{chr}\t{start}-{end}\t{caller}\t{AF}\t{ccn:.2f}\t")
                 out_additional_only.write(f"\n{gene}\t{chr}\t{start}-{end}\t{caller}\t{AF}\t{ccn:.2f}")
 
     with open(out_tsv_chrom_arms, "w") as writer:
