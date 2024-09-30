@@ -355,24 +355,14 @@ for break_points in fusion_dict:
         caller = "StarFusion"
     elif "FusionCatcher" in fusion_dict[break_points]:
         caller = "FusionCatcher"
-    breakpoint1 = fusion_dict[break_points][caller][7]
-    breakpoint2 = fusion_dict[break_points][caller][8]
-    flag_coverage1 = False
-    flag_coverage2 = False
-    if len(breakpoint1.split(":")) == 2:
-        chrom1 = fusion_dict[break_points][caller][7].split(":")[0]
-        pos1 = int(fusion_dict[break_points][caller][7].split(":")[1])
-    else:
-        flag_coverage1 = True
-    if len(breakpoint2.split(":")) == 2:
-        chrom2 = fusion_dict[break_points][caller][8].split(":")[0]
-        pos2 = int(fusion_dict[break_points][caller][8].split(":")[1])
-    else:
-        flag_coverage2 = True
+    chrom1 = fusion_dict[break_points][caller][7].split(":")[0]
+    pos1 = int(fusion_dict[break_points][caller][7].split(":")[1])
+    chrom2 = fusion_dict[break_points][caller][8].split(":")[0]
+    pos2 = int(fusion_dict[break_points][caller][8].split(":")[1])
     for exon in dedup_coverage_list:
-        if chrom1 == exon[0] and pos1 >= exon[1] and pos1 <= exon[2] and not flag_coverage1:
+        if chrom1 == exon[0] and pos1 >= exon[1] and pos1 <= exon[2]:
             exon_coverage1 = exon[3]
-        if chrom2 == exon[0] and pos2 >= exon[1] and pos2 <= exon[2] and not flag_coverage2:
+        if chrom2 == exon[0] and pos2 >= exon[1] and pos2 <= exon[2]:
             exon_coverage2 = exon[3]
     max_exon_coverage = max(exon_coverage1, exon_coverage2)
 
