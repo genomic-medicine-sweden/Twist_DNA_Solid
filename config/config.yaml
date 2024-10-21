@@ -406,7 +406,7 @@ vardict:
   extra: "-Q 1"
 
 vep:
-  container: "docker://hydragenetics/vep:113"
+  container: "docker://hydragenetics/vep:113.0"
   mode: --offline --cache --refseq
 
 vep_wo_pick:
