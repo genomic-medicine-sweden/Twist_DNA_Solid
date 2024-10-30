@@ -5,7 +5,7 @@ units: "units.tsv"
 #hydra_local_path: "PATH_TO_REPO"
 
 output: "config/output_files.yaml"
-default_container: "docker://hydragenetics/common:3.0.0"
+default_container: "docker://hydragenetics/common:3.1.0"
 
 trimmer_software: "fastp_pe"
 
@@ -406,7 +406,7 @@ vardict:
   extra: "-Q 1"
 
 vep:
-  container: "docker://hydragenetics/vep:111.0"
+  container: "docker://hydragenetics/vep:113.0"
   mode: --offline --cache --refseq
 
 vep_wo_pick:
