@@ -63,21 +63,18 @@ columns:
   ref:
     order: 14
   alt:
-     order: 15
+    order: 15
   DP:
     from: 'function'
     name: 'get_annotation_data_info'
     variables:
-      - var
+      - 'var'
       - 'DP'
     order: 16
   ref_depth:
     order: 17
   alt_depth:
     order: 18
-  Accession_number_VEP:
-    from: 'vep'
-    field: 'Feature'
   AF:
     from: 'function'
     name: 'get_info_field'
@@ -109,7 +106,7 @@ columns:
     order: 24
   AlphaMissense_score:
     from: 'vep'
-    field: 'am_pathogenicity'
+    field: 'am_pathogenicity">'
     order: 25
   background_median:
     from: 'function'
@@ -134,4 +131,7 @@ columns:
       - 'var'
       - 'Artifact'
     order: 28
-
+  Accession_number_VEP:
+    from: 'vep'
+    field: 'Feature'
+    order: 29
