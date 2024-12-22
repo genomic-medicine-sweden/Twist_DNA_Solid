@@ -211,21 +211,39 @@ files:
       - N
     deduplication:
       - umi
-  - name: HRD score - PureCN
+  - name: HRD score CNVkit - PureCN
     input: biomarker/scarhrd/{sample}_{type}.purecn.scarhrd_cnvkit_score.txt
     output: results/dna/{sample}_{type}/additional_files/biomarker/{sample}_{type}.purecn.scarhrd_cnvkit_score.txt
     types:
       - T
       - N
-  - name: HRD score - pathology
+  - name: HRD score CNVkit - pathology
     input: biomarker/scarhrd/{sample}_{type}.pathology.scarhrd_cnvkit_score.txt
     output: results/dna/{sample}_{type}/additional_files/biomarker/{sample}_{type}.pathology.scarhrd_cnvkit_score.txt
     types:
       - T
       - N
-  - name: HRD score - pathology_purecn
+  - name: HRD score CNVkit - pathology_purecn
     input: biomarker/scarhrd/{sample}_{type}.pathology_purecn.scarhrd_cnvkit_score.txt
     output: results/dna/{sample}_{type}/biomarker/{sample}_{type}.pathology_purecn.scarhrd_cnvkit_score.txt
+    types:
+      - T
+      - N
+  - name: HRD score Jumble - PureCN
+    input: biomarker/scarhrd/{sample}_{type}.purecn.scarhrd_jumble_score.txt
+    output: results/dna/{sample}_{type}/additional_files/biomarker/{sample}_{type}.purecn.scarhrd_jumble_score.txt
+    types:
+      - T
+      - N
+  - name: HRD score Jumble - pathology
+    input: biomarker/scarhrd/{sample}_{type}.pathology.scarhrd_jumble_score.txt
+    output: results/dna/{sample}_{type}/additional_files/biomarker/{sample}_{type}.pathology.scarhrd_jumble_score.txt
+    types:
+      - T
+      - N
+  - name: HRD score Jumble - pathology_purecn
+    input: biomarker/scarhrd/{sample}_{type}.pathology_purecn.scarhrd_jumble_score.txt
+    output: results/dna/{sample}_{type}/biomarker/{sample}_{type}.pathology_purecn.scarhrd_jumble_score.txt
     types:
       - T
       - N

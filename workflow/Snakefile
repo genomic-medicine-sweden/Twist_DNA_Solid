@@ -426,7 +426,7 @@ use rule gatk_get_pileup_summaries from qc as qc_gatk_get_pileup_summaries with:
 
 module biomarker:
     snakefile:
-        get_module_snakefile(config, "hydra-genetics/biomarker", path="workflow/Snakefile", tag="v0.5.0")
+        get_module_snakefile(config, "hydra-genetics/biomarker", path="workflow/Snakefile", tag="6ed20dc")
     config:
         config
 
@@ -437,6 +437,52 @@ use rule * from biomarker exclude all as biomarker_*
 use rule cnvkit2scarhrd from biomarker as biomarker_cnvkit2scarhrd with:
     input:
         seg="cnv_sv/cnvkit_call_hrd/{sample}_{type}.{tc_method}.loh.cns",
+
+
+use rule cnvkit2scarhrd from biomarker as biomarker_jumble2scarhrd with:
+    input:
+        seg="cnv_sv/jumble_cnvkit_call/{sample}_{type}.{tc_method}.loh.cns",
+    output:
+        seg=temp("biomarker/cnvkit2scarhrd/{sample}_{type}.{tc_method}.jumble.scarhrd.cns"),
+    log:
+        "biomarker/cnvkit2scarhrd/{sample}_{type}.{tc_method}.jumble.scarhrd.cns.log",
+    benchmark:
+        repeat(
+            "biomarker/cnvkit2scarhrd/{sample}_{type}.{tc_method}.jumble.scarhrd.cns.benchmark.tsv",
+            config.get("cnvkit2scarhrd", {}).get("benchmark_repeats", 1),
+        )
+
+
+use rule scarhrd from biomarker as biomarker_jumble_scrahrd with:
+    input:
+        seg_cnvkit="biomarker/cnvkit2scarhrd/{sample}_{type}.{tc_method}.jumble.scarhrd.cns",
+    output:
+        hrd=temp("biomarker/scarhrd/{sample}_{type}.{tc_method}/{sample}_{type}.{tc_method}.jumble_HRDresults.txt"),
+    params:
+        hrd_dir=directory("biomarker/scarhrd/{sample}_{type}.{tc_method}.jumble/"),
+        reference_name=config.get("scarhrd", {}).get("reference_name", "grch37"),
+        seqz=config.get("scarhrd", {}).get("seqz", False),
+    log:
+        "biomarker/scarhrd/{sample}_{type}.{tc_method}.jumble_HRDresults.txt.log",
+    benchmark:
+        repeat(
+            "biomarker/scarhrd/{sample}_{type}.{tc_method}.jumble_HRDresults.txt.benchmark.tsv",
+            config.get("scarhrd", {}).get("benchmark_repeats", 1),
+        )
+
+
+use rule fix_scarhrd_output from biomarker as biomarker_fix_scarhrd_jumble_output with:
+    input:
+        hrd="biomarker/scarhrd/{sample}_{type}.{tc_method}/{sample}_{type}.{tc_method}.jumble_HRDresults.txt",
+    output:
+        hrd=temp("biomarker/scarhrd/{sample}_{type}.{tc_method}.scarhrd_jumble_score.txt"),
+    log:
+        "biomarker/scarhrd/{sample}_{type}.{tc_method}.scarhrd_jumble_score.txt.log",
+    benchmark:
+        repeat(
+            "biomarker/scarhrd/{sample}_{type}.{tc_method}.scarhrd_jumble_score.txt.benchmark.tsv",
+            config.get("fix_scarhrd_output", {}).get("benchmark_repeats", 1),
+        )
 
 
 use rule msisensor_pro_filter_sites from biomarker as biomarker_msisensor_pro_filter_sites_unfiltered with:
