@@ -457,13 +457,25 @@ files:
       - T
   - name: HLA optitype
     input: biomarker/optitype/{sample}_{type}/{sample}_{type}_hla_type_result.tsv
-    output: results/dna/hla/{sample}_{type}_hla_type_result.tsv
+    output: results/dna/{sample}_{type}/hla/{sample}_{type}_hla_type_result.tsv
     types:
       - T
       - N
   - name: HLA coverage optitype
     input: biomarker/optitype/{sample}_{type}/{sample}_{type}_hla_type_coverage_plot.pdf
-    output: results/dna/hla/{sample}_{type}_hla_type_coverage_plot.pdf
+    output: results/dna/{sample}_{type}/hla/{sample}_{type}_hla_type_coverage_plot.pdf
+    types:
+      - T
+      - N
+  - name: ctDNA fraction
+    input: cnv_sv/estimate_ctdna_fraction/{sample}_{type}.ctDNA_fraction.tsv
+    output: results/dna/{sample}_{type}/cnv/{sample}_{type}.ctDNA_fraction.tsv
+    types:
+      - T
+      - N
+  - name: ctDNA info
+    input: cnv_sv/estimate_ctdna_fraction/{sample}_{type}.ctDNA_info.tsv
+    output: results/dna/{sample}_{type}/additional_files/cnv/{sample}_{type}.ctDNA_info.tsv
     types:
       - T
       - N

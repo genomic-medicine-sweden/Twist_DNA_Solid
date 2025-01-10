@@ -5,11 +5,11 @@ __license__ = "GPL-3"
 
 
 include: "rules/common.smk"
-include: "rules/sample_mixup_check.smk"
 include: "rules/bcftools.smk"
 include: "rules/call_small_cnv_deletions.smk"
 include: "rules/call_small_cnv_amplifications.smk"
 include: "rules/cnv_tsv_report.smk"
+include: "rules/estimate_ctdna_fraction.smk"
 include: "rules/exon_skipping.smk"
 include: "rules/fix_vcf_ad_for_qci.smk"
 include: "rules/hotspot_report.smk"
@@ -17,6 +17,7 @@ include: "rules/house_keeping_gene_coverage.smk"
 include: "rules/purecn_modify_vcf.smk"
 include: "rules/report_gene_fuse.smk"
 include: "rules/report_fusions.smk"
+include: "rules/sample_mixup_check.smk"
 
 
 rule all:

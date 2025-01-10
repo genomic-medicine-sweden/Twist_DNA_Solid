@@ -20,7 +20,7 @@ properties:
         description: default memory used per cpu
       partition:
         type: string
-        description: default partition to use on the cluser
+        description: default partition to use on the cluster
     required:
       - threads
       - time
@@ -30,7 +30,7 @@ properties:
 
   bcftools_id_snps:
     type: object
-    description: resource definitions for bacftools variant pileup
+    description: resource definitions for bcftools variant pileup
     properties:
       mem_mb:
         type: integer
@@ -107,6 +107,26 @@ properties:
       threads:
         type: integer
         description:  number of threads to be available
+
+  estimate_ctdna_fraction:
+    type: object
+    description: resource definitions for estimate_ctdna_fraction
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
 
   exon_skipping:
     type: object

@@ -93,6 +93,29 @@ Collect all CNV calls into an excel friendly text file. Adds potential 1p19q cal
 
 ---
 
+## estimate_ctdna_fraction
+Estimate ctDNA fraction based on CNV and SNP information using an in-house script. For CNV based estimation the VAF-values of germline SNPs (the BAF-plot) for each segment is used to make an density calculation. If two peaks are found on opposite sides of 50% allele frequency the separation of the peak is used to calculate the ctDNA fraction. The highest ctDNA fraction is reported. If no CNV segments have peak separation 0% is reported. For SNV based estimation the ctDNA is reported as the highest variant allele frequency SNV times two.
+
+### :snake: Rule
+
+#SNAKEMAKE_RULE_SOURCE__estimate_ctdna_fraction__estimate_ctdna_fraction#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__estimate_ctdna_fraction__estimate_ctdna_fraction#
+
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__estimate_ctdna_fraction#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__estimate_ctdna_fraction#
+
+---
+
 ## exon_skipping
 Calls exon skipping events in RNA data. Only reports MET exon 14 skipping and the EGFRvIII variant. See further [exon skipping info](rna_exon_skipping.md).
 
@@ -274,3 +297,4 @@ Compare ID-SNPs in the RNA samples to the DNA samples in the same analysis and r
 #### Resources settings (`resources.yaml`)
 
 #RESOURCESSCHEMA__sample_mixup_check#
+

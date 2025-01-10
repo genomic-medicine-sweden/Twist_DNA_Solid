@@ -637,6 +637,35 @@ properties:
         type: number
         description: minimum fraction of matching SNP calls for an RNA and DNA matched sample
 
+  estimate_ctdna_fraction:
+    type: object
+    description: parameters for estimate_ctdna_fraction
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      gnomAD_AF_limit:
+        type: number
+        description: additional filtering based on existence in GnomAD (removes germline)
+      max_somatic_af:
+        type: number
+        description: additional filtering based on maximal allowed allele frequency (removes germline)
+      min_germline_af:
+        type: number
+        description: minimial germline allele frequency to be included in density calculations (removes somatic)
+      min_nr_SNPs_per_segment:
+        type: integer
+        description: minimal number of germline SNPs in segments to be used for ctDNA estimation
+      min_segment_length:
+        type: integer
+        description: minimal length of segments to be used for ctDNA estimation
+      vaf_baseline:
+        type: number
+        description: Sets the VAF-baseline. In theory BAF-baseline is 0.5 (50% for each SNP), however in practice this is slightly shifted downwards due to reference bias in alignment
+
 required:
   - samples
   - units

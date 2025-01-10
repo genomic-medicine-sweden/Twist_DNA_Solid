@@ -111,6 +111,34 @@ properties:
             type: string
             description: File where large CNVs are reported. Used for extra table in CNV-html report.
 
+  estimate_ctdna_fraction:
+    type: object
+    description: input and output parameters for estimate_ctdna_fraction
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          germline_vcf:
+            type: string
+            description: Germline vcf only. Same file as used in BAF plots of the CNV html report
+          segments:
+            type: string
+            description: CNV segments (from Jumble)
+          vcf:
+            type: string
+            description: Small variant vcf with vep annotations
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          ctDNA_fraction:
+            type: string
+            description: Estimated ctDNA fraction values based on CNV and SNV data
+          ctDNA_info:
+            type: string
+            description: CNV segment info for regions with deletion signals
+
   exon_skipping:
     type: object
     description: input and output parameters for exon_skipping
