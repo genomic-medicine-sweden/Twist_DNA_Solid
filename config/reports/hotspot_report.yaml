@@ -106,7 +106,7 @@ columns:
     order: 24
   AlphaMissense_score:
     from: 'vep'
-    field: 'am_pathogenicity">'
+    field: 'am_pathogenicity"'
     order: 25
   background_median:
     from: 'function'
