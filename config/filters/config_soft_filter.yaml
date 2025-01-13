@@ -15,7 +15,7 @@ filters:
     soft_filter_flag: "Artifact_gt_3"
     soft_filter: "True"
   background:
-    description: "Soft filter position with where backgound distribution overlaps variant (lower than 4 SD from median)"
+    description: "Soft filter position with where background distribution overlaps variant (lower than 4 SD from median)"
     expression: "(INFO:PositionNrSD < 4 and !exist[1-hotspot, INFO:Hotspot])"
     soft_filter_flag: "Background_lt_4"
     soft_filter: "True"
@@ -26,16 +26,16 @@ filters:
     soft_filter: "True"
   ad:
     description: "Soft filter variants with few observations (AD lower than 20)"
-    expression: "(FORMAT:AD:1 < 20 and !exist[1-hotspot, INFO:Hotspot] and VEP:SYMBOL != TERT)"
+    expression: "(FORMAT:AD:1 < 20 and !exist[1-hotspot, INFO:Hotspot] and VEP:NA_TRUE:SYMBOL != TERT)"
     soft_filter_flag: "AD_lt_20"
     soft_filter: "True"
   ad_hotspot:
     description: "Soft filter hotspot variants with few observations (AD lower than 10)"
-    expression: "(FORMAT:AD:1 < 10 and exist[1-hotspot, INFO:Hotspot] and VEP:SYMBOL != TERT)"
+    expression: "(FORMAT:AD:1 < 10 and exist[1-hotspot, INFO:Hotspot] and VEP:NA_TRUE:SYMBOL != TERT)"
     soft_filter_flag: "AD_HS_lt_10"
     soft_filter: "True"
   ad_TERT:
     description: "Soft filter TERT variants with few observations (AD lower than 4)"
-    expression: "(FORMAT:AD:1 < 4 and exist[1-hotspot, INFO:Hotspot] and VEP:SYMBOL = TERT)"
+    expression: "(FORMAT:AD:1 < 4 and exist[1-hotspot, INFO:Hotspot] and VEP:NA_TRUE:SYMBOL = TERT)"
     soft_filter_flag: "AD_TERT_lt_4"
     soft_filter: "True"
