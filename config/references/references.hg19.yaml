@@ -101,6 +101,38 @@
       path: ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz.tbi
       type: file
       url: https://figshare.scilifelab.se/ndownloader/files/42061254
+
+  juli_annotate:
+    cosmic:
+      checksum: b61743a8cd0d0c3513492c717fcfa51a
+      path: ref_data/juli/CosmicFusionExport_V76.tsv
+      type: file
+      url: https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/raw/refs/tags/v0.13.0/juli/CosmicFusionExport_V76.tsv
+
+    pfam:
+      checksum: 81cf37cce3d34adb8e0d5df1edebaaeb
+      path: ref_data/juli/Pfam-A.full.human
+      type: file
+      url: https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/raw/refs/tags/v0.13.0/juli/Pfam-A.full.human
+
+    ref_genes: 
+      checksum: 225faf771242f46e49e0cb2cbaed4132
+      path: ref_data/juli/refGene_hg19.txt
+      type: file
+      url: https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/raw/refs/tags/v0.13.0/juli/refGene_hg19.txt
+
+    uniprot:
+      checksum: 930a8899a7b3451adb7f553340febef6
+      path: ref_data/juli/HGNC_GeneName_UniProtID_160524.txt
+      type: file
+      url: https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/raw/refs/tags/v0.13.0/juli/HGNC_GeneName_UniProtID_160524.txt
+
+  juli_call:
+    gap_file:
+      checksum: cb6448d52153b6add870cf26921aea44
+      path: ref_data/juli/gap_hg19.txt
+      type: file
+      url: https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/raw/refs/tags/v0.13.0/juli/gap_hg19.txt
           
   references:
     fasta:

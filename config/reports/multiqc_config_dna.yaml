@@ -1,8 +1,20 @@
+title: "Clinical Genomics MultiQC Report"
+subtitle: "Reference used: GRCh37"
+intro_text: "The MultiQC DNA report summarise analysis results from GMS560 panel data that been analysed by the Twist Solid pipeline (https://github.com/genomic-medicine-sweden/Twist_Solid)."
+
+report_header_info:
+  - Contact E-mail: "igp-klinsek-bioinfo@lists.uu.se"
+  - Application Type: "Bioinformatic analysis of GMS560 panel for solid cancers"
+
+show_analysis_paths: True
+
 #decimalPoint_format: ','
 extra_fn_clean_exts: ##from this until end
     - '.duplication_metrics'
-    - type: regex
-      pattern: '_fastq[12]'
+    - '.HsMetrics'
+    - '.alignment_summary_metrics'
+    - type: regex_keep
+      pattern: '[0-9A-Z-]+'
 #extra_fn_clean_trim:   #if found in beginning or end
 #fn_ignore_dirs:
 #fn_ignore_files:
@@ -53,6 +65,7 @@ table_columns_visible:
     avg_sequence_length: False
     percent_fails: False
     total_sequences: False
+    median_sequence_length: False
 
 multiqc_cgs:
   "Samtools: stats":

@@ -84,7 +84,7 @@ PROJECT_REF_DATA: "PATH_TO/design_and_ref_files" # parent folder for ref_data, e
 ```
 
 ## Input sample files
-The pipeline uses sample input files (`samples.tsv` and `units.tsv`) with information regarding sample information, sequencing meta information as well as the location of the fastq-files. Specification for the input files can be found at [Twist Solid schemas](https://github.com/genomic-medicine-sweden/Twist_Solid/blob/develop/workflow/schemas/). Using the python virtual environment created above it is possible to generate these files automatically using [hydra-genetics create-input-files](https://hydra-genetics.readthedocs.io/en/latest/create_sample_files/):
+The pipeline uses sample input files (`samples.tsv` and `units.tsv`) with information regarding sample information, sequencing meta information as well as the location of the fastq-files. Specification for the input files can be found at [Twist Solid schemas](https://github.com/genomic-medicine-sweden/Twist_Solid/blob/develop/workflow/schemas/). Using the python virtual environment created above it is possible to generate these files automatically using [hydra-genetics create-input-files](https://hydra-genetics.readthedocs.io/en/latest/run_pipeline/create_sample_files/):
 ```bash
 hydra-genetics create-input-files -d path/to/fastq-files/
 ```
@@ -95,7 +95,7 @@ Using the activated python virtual environment created above, this is a basic co
 snakemake --profile profiles/NAME_OF_PROFILE -s workflow/Snakefile
 ```  
 <br />
-The are many additional [snakemake running options](https://snakemake.readthedocs.io/en/stable/executing/cli.html#) some of which is listed below. However, options that are always used should be put in the [profile](https://hydra-genetics.readthedocs.io/en/latest/profile/).
+The are many additional [snakemake running options](https://snakemake.readthedocs.io/en/stable/executing/cli.html#) some of which is listed below. However, options that are always used should be put in the [profile](https://hydra-genetics.readthedocs.io/en/latest/run_pipeline/profile/).
 
 * --notemp - Saves all intermediate files. Good for development and testing different options.
 * --until <rule> - Runs only rules dependent on the specified rule.

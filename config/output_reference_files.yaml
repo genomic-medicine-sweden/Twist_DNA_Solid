@@ -5,8 +5,8 @@ files:
     types:
       - N
   - name: jumble_pon
-    input: references/jumble_reference/design.bed.reference.RDS
-    output: result/jumble.PoN.RDS
+    input: references/jumble_reference/{design}.reference.RDS
+    output: result/jumble.{design}.PoN.RDS
     types:
       - N
   - name: gatk_pon
@@ -31,7 +31,7 @@ files:
     types:
       - N
   - name: msisensor_pro_reference_list_baseline
-    input: references/msisensor_pro_scan/Msisensor_pro_reference.list
+    input: references/msisensor_pro_baseline/Msisensor_pro_reference.list_baseline
     output: result/Msisensor_pro_reference.list_baseline
     types:
       - N

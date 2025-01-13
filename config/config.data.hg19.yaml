@@ -118,8 +118,18 @@ hotspot_report:
     all: "{{PROJECT_DESIGN_DATA}}/GMS560/reports/Hotspots_combined_regions_nodups.231011.csv"
     ENC: "{{PROJECT_DESIGN_DATA}}/GMS560/reports/ENC_hotspots_240919.csv"
 
+juli_annotate:
+  cosmic: "{{PROJECT_REF_DATA}}/ref_data/juli/CosmicFusionExport_V76.tsv"
+  pfam: "{{PROJECT_REF_DATA}}/ref_data/juli/Pfam-A.full.human"
+  ref_genes: "{{PROJECT_REF_DATA}}/ref_data/juli/refGene_hg19.txt"
+  uniprot: "{{PROJECT_REF_DATA}}/ref_data/juli/HGNC_GeneName_UniProtID_160524.txt"
+
+juli_call:
+  gap_file: "{{PROJECT_REF_DATA}}/ref_data/juli/gap_hg19.txt"
+  ref_genes: "{{PROJECT_REF_DATA}}/ref_data/juli/refGene_hg19.txt"
+
 jumble_run:
-  normal_reference: "{{PROJECT_DESIGN_DATA}}/GMS560/cnv/jumble/jumble.combined.filtered.50.PoN.hg19.RDS"
+  normal_reference: "{{PROJECT_DESIGN_DATA}}/GMS560/PoN/jumble.combined.filtered.50.PoN.hg19.RDS"
 
 manta_config_t:
   extra: "--exome --callRegions {{PROJECT_DESIGN_DATA}}/GMS560/design/pool1_pool2.sort.merged.padded20.cnv200.hg19.split_fusion_genes.210608.bed.gz"
@@ -133,8 +143,9 @@ merge_cnv_json:
 mosdepth:
   extra: "--no-per-base --fast-mode"
 
-msisensor_pro:
+msisensor_pro_filter_sites:
   PoN: "{{PROJECT_PON_DATA}}/GMS560/PoN/Msisensor_pro_reference_nextseq_36.list_baseline"
+  msi_sites_bed: "{{PROJECT_PON_DATA}}/GMS560/design/SelectedMSIloci2019Sorted.bed"
 
 purecn:
   extra: "--model betabin --mapping-bias-file {{PROJECT_PON_DATA}}/GMS560/PoN/purecn/mapping_bias_nextseq_27_hg19.rds"

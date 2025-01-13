@@ -1,0 +1,66 @@
+files:
+  - name: Small variants
+    type: file_link
+    input: results/dna/{sample}_{type}/vcf/{sample}_{type}.annotated.exon_only.filter.hard_filter.codon_snv.qci.vcf
+    description: File link to vcf with SNVs and INDELs
+    nav_header: Small variants
+  - name: Coverage and mutations
+    type: file_link
+    input: results/dna/{sample}_{type}/qc/{sample}_{type}.coverage_and_mutations.tsv
+    description: File link to coverage and mutations
+    nav_header: Small variants
+  - name: Coverage and mutations ENC
+    type: file_link
+    input: results/dna/{sample}_{type}/qc/{sample}_{type}.coverage_and_mutations.ENC.tsv
+    description: File link to coverage and mutations for ENC
+    nav_header: Small variants
+
+  - name: TMB
+    type: plain_text
+    description: TMB (cut-off 10)
+    input: results/dna/{sample}_{type}/biomarker/{sample}_{type}.TMB.txt
+    nav_header: Biomarkers
+  - name: MSI unfiltered
+    type: file_table
+    description: MSI score (cut-off X%)
+    input: results/dna/{sample}_{type}/biomarker/{sample}_{type}.msisensor_pro.unfiltered.score.tsv
+    nav_header: Biomarkers
+  - name: MSI filtered
+    type: file_table
+    description: MSI score (cut-off X%). Filtering based on ~400 known msi-sites. 
+    input: results/dna/{sample}_{type}/biomarker/{sample}_{type}.msisensor_pro.filtered.score.tsv
+    nav_header: Biomarkers
+  
+  - name: PureCN TC
+    type: file_table
+    input: results/dna/{sample}_{type}/cnv/{sample}_{type}.purecn_purity_ploidity.csv
+    description: TC estimated by purecn
+    nav_header: CNV
+  - name: CNV html
+    type: file_link
+    input: results/dna/{sample}_{type}/cnv/{sample}_{type}.pathology_purecn.cnv.html
+    description: File link to CNV html report
+    nav_header: CNV
+  - name: CNV tsv report
+    type: file_table
+    input: results/dna/{sample}_{type}/additional_files/cnv/{sample}_{type}.pathology_purecn.amp_all_del_all.cnv_report.tsv
+    description: CNV tsv report (All amplification and deletion genes)
+    nav_header: CNV
+
+  - name: FuseqWes
+    type: file_table
+    input: results/dna/{sample}_{type}/fusion/{sample}_{type}.fuseq_wes.report.csv
+    description: FuseqWES report
+    nav_header: Fusions
+  - name: JuLI
+    type: file_table
+    input: results/dna/{sample}_{type}/fusion/{sample}_{type}.juli.filtered.fusions.txt
+    description: JuLI report
+    nav_header: Fusions
+    
+  - name: MultiQC
+    type: multiqc
+    input: qc/multiqc/multiqc_DNA_data/multiqc_data.json
+    sections: ["table"]
+    description: multiqc general stats for this sample
+    nav_header: MultiQC

@@ -396,14 +396,12 @@ properties:
     type: string
     description: path to a folder that contains hydra-genetics modules. Setting this variable will make the pipeline use local git repos instead of the once located on github.
 
-  msisensor_pro:
+  msisensor_pro_filter_sites:
     type: object
     properties:
       PoN:
         type: string
         description: path to panel of normals
-    required:
-      - PoN
 
   multiqc:
     type: object

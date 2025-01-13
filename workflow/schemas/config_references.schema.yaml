@@ -51,8 +51,6 @@ properties:
       PoN:
         type: string
         description: path to panel of normals
-    required:
-      - PoN
 
   reference:
     type: object

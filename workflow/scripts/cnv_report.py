@@ -285,10 +285,12 @@ def create_tsv_report(
                 counter += 1
 
             for gene in gene_variant_dict:
-                if len(gene_variant_dict[gene]) == 1:
-                    org_caller = gene_variant_dict[gene][0][3]
+                if len(gene_variant_dict[gene]) < len(gene_all_dict[gene]):
+                    org_callers = []
+                    for caller_info in gene_variant_dict[gene]:
+                        org_callers.append(caller_info[3])
                     for cnv in gene_all_dict[gene]:
-                        if cnv[3] != org_caller:
+                        if cnv[3] not in org_callers:
                             chr = cnv[0]
                             start = cnv[1]
                             end = cnv[2]

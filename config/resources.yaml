@@ -58,6 +58,12 @@ fastqc:
   mem_mb: 12288
   mem_per_cpu: 6144
 
+juli_call:
+  threads: 10
+  mem_mb: 61440
+  mem_per_cpu: 6144
+  time: "12:00:00"
+
 jumble_run:
   threads: 10
 

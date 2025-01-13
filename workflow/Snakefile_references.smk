@@ -54,7 +54,7 @@ use rule cnvkit_batch from cnv_sv as cnv_sv_cnvkit_batch with:
     input:
         bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
         bai="alignment/samtools_merge_bam/{sample}_{type}.bam.bai",
-        cnv_reference="references/cnvkit_build_normal_reference/cnvkit.PoN.cnn",
+        reference="references/cnvkit_build_normal_reference/cnvkit.PoN.cnn",
 
 
 use rule background_annotation from annotation as annotation_background_annotation with:
@@ -68,6 +68,16 @@ module misc:
         get_module_snakefile(config, "hydra-genetics/misc", path="workflow/Snakefile", tag="v0.2.0")
     config:
         config
+
+
+use rule tabix from misc as misc_tabix with:
+    wildcard_constraints:
+        file="^references/.+",
+
+
+use rule bgzip from misc as misc_bgzip with:
+    wildcard_constraints:
+        file="^references/.+",
 
 
 module references:
@@ -92,7 +102,7 @@ use rule * from references exclude all as references_*
 
 
 ####################################################
-#              svdb
+#              svdb override
 ####################################################
 # use vcf create by pipeline. ??????????Shoud we override svdb annotation??????????
 use rule svdb_build from references as references_svdb_build with:
@@ -101,7 +111,7 @@ use rule svdb_build from references as references_svdb_build with:
 
 
 ####################################################
-#              artifact_panel
+#              artifact_panel override
 ####################################################
 # use vcf created by pipeline
 use rule create_artifact_file from references as references_create_artifact_file with:
@@ -110,7 +120,16 @@ use rule create_artifact_file from references as references_create_artifact_file
 
 
 ####################################################
-#              gatk pon
+#              msi PoN override
+####################################################
+# Use bam files created by pipeline: alignment/samtools_merge_bam/{sample}_{type}.bam
+use rule msisensor_pro_input_file from references as references_msisensor_pro_input_file with:
+    input:
+        bams=lambda wildcards: get_bams(units, "msisensor_pro_reference_list_baseline"),
+
+
+####################################################
+#              gatk pon override
 ####################################################
 # use hdf5 files created by reference pipeline references/collect_read_counts/%s_%s.counts.hdf5
 use rule create_read_count_panel_of_normals from references as references_create_read_count_panel_of_normals with:
@@ -170,7 +189,7 @@ use rule jumble_count from references as references_jumble_count with:
 
 
 ####################################################
-#              purecn normal input over
+#              purecn normal input override
 ####################################################
 # Use bam files created by pipeline: alignment/samtools_merge_bam/{sample}_{type}.bam
 use rule purecn_bam_list from references as references_purecn_bam_list with:

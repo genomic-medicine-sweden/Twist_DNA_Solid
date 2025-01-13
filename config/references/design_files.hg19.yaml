@@ -179,6 +179,13 @@
      type: file
      url: https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/raw/v0.9.0/cnv/cytoBand.hg19.txt
 
+ msisensor_pro_filter_sites:
+   msi_sites_bed:
+     checksum: 74c4fddf7928902c7b107673551b2c8b
+     path: GMS560/design/SelectedMSIloci2019Sorted.bed
+     type: file
+     url: https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/raw/v0.12.0/design/SelectedMSIloci2019Sorted.bed
+
  purecn:    
    intervals: 
      checksum: 0857e05962696cd3c2e5a4ea94d0fb2c

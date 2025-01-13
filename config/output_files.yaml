@@ -171,9 +171,21 @@ files:
     types:
       - T
       - N
-  - name: MSI Sensor Pro TSV
+  - name: Results report DNA HTML
+    input: reports/general_html_report/{sample}_{type}.general_report.html
+    output: results/dna/{sample}_{type}/general_report/{sample}_{type}.general_report.html
+    types:
+      - T
+      - N
+  - name: MSI Sensor Pro filtered TSV
     input: biomarker/msisensor_pro/{sample}_{type}
-    output: results/dna/{sample}_{type}/biomarker/{sample}_{type}.msisensor_pro.score.tsv
+    output: results/dna/{sample}_{type}/biomarker/{sample}_{type}.msisensor_pro.filtered.score.tsv
+    types:
+      - T
+      - N
+  - name: MSI Sensor Pro unfiltered TSV
+    input: biomarker/msisensor_pro_unfiltered/{sample}_{type}
+    output: results/dna/{sample}_{type}/biomarker/{sample}_{type}.msisensor_pro.unfiltered.score.tsv
     types:
       - T
       - N
@@ -283,6 +295,18 @@ files:
       - N
     deduplication:
       - umi
+  - name: JuLI fusions
+    input: fusions/juli_call/{sample}_{type}.annotated.filtered.txt
+    output: results/dna/{sample}_{type}/fusion/{sample}_{type}.juli.filtered.fusions.txt
+    types:
+      - T
+      - N
+  - name: JuLI unfiltered fusions
+    input: fusions/juli_call/{sample}_{type}.annotated.txt
+    output: results/dna/{sample}_{type}/additional_files/fusion/{sample}_{type}.juli.fusions.txt
+    types:
+      - T
+      - N
   - name: ID-SNP VCF RNA
     input: snv_indels/bcftools_id_snps/{sample}_{type}.id_snps.vcf
     output: results/rna/{sample}_{type}/id_snps/{sample}_{type}.id_snps.vcf
@@ -420,8 +444,26 @@ files:
     types:
       - T
       - N
+  - name: Germline vcf used in CNV analysis
+    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.exclude.blacklist.vcf.gz
+    output: results/dna/{sample}_{type}/additional_files/cnv/{sample}_{type}.germline.vcf.gz
+    types:
+      - T
+      - N
   - name: Manta VCF
     input: cnv_sv/manta_run_workflow_t/{sample}/results/variants/tumorSV.vcf.gz
     output: results/dna/{sample}_{type}/additional_files/cnv/{sample}_{type}.manta_tumorSV.vcf.gz
     types:
       - T
+  - name: HLA optitype
+    input: biomarker/optitype/{sample}_{type}/{sample}_{type}_hla_type_result.tsv
+    output: results/dna/hla/{sample}_{type}_hla_type_result.tsv
+    types:
+      - T
+      - N
+  - name: HLA coverage optitype
+    input: biomarker/optitype/{sample}_{type}/{sample}_{type}_hla_type_coverage_plot.pdf
+    output: results/dna/hla/{sample}_{type}_hla_type_coverage_plot.pdf
+    types:
+      - T
+      - N

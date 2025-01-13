@@ -18,9 +18,6 @@ bwa_mem:
 fastp_pe:
   threads: 1
 
-vep:
-  threads: 8
-
 fastqc:
   threads: 2
 
@@ -32,6 +29,16 @@ fuseq_wes:
 fusioncatcher:
   threads: 8
   mem_mb: 30000
+
+gene_fuse:
+  threads: 8
+  threads: 8
+  time: "8:00:00"
+
+juli_call:
+  threads: 8
+  mem_mb: 15200
+  time: "12:00:00"
 
 manta_run_workflow_t:
   threads: 8
@@ -46,16 +53,6 @@ mutect2:
   mem_mb: 15200
   time: "8:00:00"
 
-gene_fuse:
-  threads: 8
-  threads: 8
-  time: "8:00:00"
-
-vardict:
-  threads: 2
-  time: "16:00:00"
-  mem_mb: 7600
-
 star:
   threads: 8
   mem_mb: 30000
@@ -63,4 +60,13 @@ star:
 star_fusion:
   threads: 8
   mem_mb: 30000
+
+vardict:
+  threads: 2
+  time: "16:00:00"
+  mem_mb: 7600
+
+vep:
+  threads: 8
+
            

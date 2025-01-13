@@ -1,5 +1,5 @@
 # SNV and INDEL calling, annotation and filtering
-See the [snv_indels hydra-genetics module](https://hydra-genetics-snv-indels.readthedocs.io/en/latest/) documentation for more details on the softwares for variant calling, [annotation hydra-genetics module](https://annotation.readthedocs.io/en/latest/) for annotation and [filtering hydra-genetics module](https://filtering.readthedocs.io/en/latest/) for filtering. Default hydra-genetics settings/resources are used if no configuration is specified.
+See the [snv_indels hydra-genetics module](https://hydra-genetics-snv-indels.readthedocs.io/en/latest/) documentation for more details on the softwares for variant calling, [annotation hydra-genetics module](https://hydra-genetics-annotation.readthedocs.io/en/latest/) for annotation and [filtering hydra-genetics module](https://hydra-genetics-filtering.readthedocs.io/en/latest/) for filtering. Default hydra-genetics settings/resources are used if no configuration is specified.
 
 <br />
 ![dag plot](images/snv.png)
@@ -87,7 +87,7 @@ Variant vcf files from the two callers are ensembled into one vcf file using **[
 | sort_order | --names vardict, gatk_mutect2 | priority order for retaining variant information |
 
 ## Annotation
-The ensembled vcf file is annotated firstly using VEP, followed by artifact annotation and background annotation. See the [annotation hydra-genetics module](https://annotation.readthedocs.io/en/latest/) for additional information.
+The ensembled vcf file is annotated firstly using VEP, followed by artifact annotation and background annotation. See the [annotation hydra-genetics module](https://hydra-genetics-annotation.readthedocs.io/en/latest/) for additional information.
 
 ### VEP
 The ensembled vcf file is annotated using **[VEP](https://www.ensembl.org/info/docs/tools/vep/index.html)** v105. VEP adds a pletora of information for each variant which is specified by the configuration flags listed below. Of note are --pick which picks only one representative transcript for each variant, --af_gnomad which adds germline information, and --cache which uses a local copy of the databases for better performance. See [VEP options](https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html) for more information.
@@ -161,7 +161,7 @@ Example annotation for one variant added to a vcf file in the INFO field:
 * [Panel of Normal](references.md#background_db) with position specific background information
 
 ## Filtering
-Annotated vcfs are hard filtered first by removing regions outside exons and then filtered by a number of filtering criteria described below. See the [filtering hydra-genetics module](https://filtering.readthedocs.io/en/latest/) for additional information. A soft filtered version of the exonic regions is also provided for development and other investigations.
+Annotated vcfs are hard filtered first by removing regions outside exons and then filtered by a number of filtering criteria described below. See the [filtering hydra-genetics module](https://hydra-genetics-filtering.readthedocs.io/en/latest/) for additional information. A soft filtered version of the exonic regions is also provided for development and other investigations.
 
 ### Extract exonic regions
 Use **[bcftools filter -R](https://samtools.github.io/bcftools/bcftools.html)** v1.15 to extract variants overlapping exonic regions (including 20 bp padding) defined in a bed file which is a sub bed file of the general design bed file.  

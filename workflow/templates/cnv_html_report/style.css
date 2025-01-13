@@ -14,6 +14,28 @@ header .fix-right {
   right: 1em;
 }
 
+.plot-container div,
+.plot-container section {
+  max-width: 1000px;
+}
+
+details {
+  font-size: 0.8rem;
+  background-color: #aad1f2;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 5px;
+}
+
+details summary {
+  cursor: pointer;
+  user-select: none;
+}
+
+details p {
+  margin: 1rem 1rem 0.5rem 1rem;
+}
+
 dialog {
   user-select: none;
 }
@@ -62,11 +84,14 @@ dialog.info p i {
 .app-container {
   display: flex;
   flex-direction: column;
+  gap: 2rem;
+  justify-content: flex-start;
 }
 
 .plot-container {
   display: flex;
   flex-direction: column;
+  max-width: 1000px;
 }
 
 .plot-container .annotation-label {
@@ -89,6 +114,20 @@ dialog.info p i {
   max-width: 60em;
 }
 
+#current-baseline-offset {
+  width: 3rem;
+  margin-right: 0.5rem;
+}
+
+#current-baseline-offset.invalid {
+  background-color: #ff6762;
+}
+
+svg {
+  display: block;
+  max-width: 1000px;
+}
+
 svg .panel-overlay {
   stroke: forestgreen;
 }
@@ -101,6 +140,21 @@ svg .gridline {
   stroke: #dddddd;
   stroke-width: 0.5px;
   shape-rendering: crispEdges;
+}
+
+svg .gridline.baseline {
+  stroke: #777777;
+  stroke-width: 1.5px;
+}
+
+svg .cursor-line {
+  stroke: #888888;
+}
+
+svg .cursor-label {
+  fill: #dddddd;
+  stroke: #888888;
+  stroke-width: 1px;
 }
 
 /* Narrow view */
@@ -124,6 +178,7 @@ svg .gridline {
 
   .plot-container {
     min-width: 48%;
+    max-width: 1000px;
   }
 
   .plot-container .x-label,

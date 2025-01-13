@@ -190,7 +190,7 @@ use rule samtools_merge_bam from alignment as alignment_samtools_merge_bam_mutec
 
 module snv_indels:
     snakefile:
-        get_module_snakefile(config, "hydra-genetics/snv_indels", path="workflow/Snakefile", tag="v0.3.0")
+        get_module_snakefile(config, "hydra-genetics/snv_indels", path="workflow/Snakefile", tag="v1.1.0")
     config:
         config
 
@@ -239,7 +239,22 @@ module annotation:
         config
 
 
-use rule * from annotation exclude all, bgzip_vcf, tabix_vcf as annotation_*
+use rule * from annotation exclude all as annotation_*
+
+
+use rule bgzip_vcf from annotation as annotation_bgzip_vcf with:
+    wildcard_constraints:
+        file="^qc/.+",
+
+
+use rule tabix_vcf from annotation as annotation_tabix_vcf with:
+    wildcard_constraints:
+        file="^qc/.+",
+
+
+use rule annotate_cnv from annotation as annotation_annotate_cnv with:
+    wildcard_constraints:
+        file="^cnv_sv/.+",
 
 
 use rule vep from annotation as annotation_vep_wo_pick with:
@@ -288,6 +303,11 @@ module filtering:
 use rule * from filtering exclude all as filtering_*
 
 
+use rule filter_vcf from filtering as filtering_filter_vcf with:
+    wildcard_constraints:
+        file="^cnv_sv/.+|^snv_indels/.+",
+
+
 module qc:
     snakefile:
         get_module_snakefile(config, "hydra-genetics/qc", path="workflow/Snakefile", tag="v0.5.0")
@@ -296,6 +316,13 @@ module qc:
 
 
 use rule * from qc exclude all as qc_*
+
+
+use rule multiqc from qc as qc_multiqc with:
+    output:
+        html=temp("qc/multiqc/multiqc_{report}.html"),
+        data=temp(directory("qc/multiqc/multiqc_{report}_data")),
+        data_json="qc/multiqc/multiqc_{report}_data/multiqc_data.json",
 
 
 use rule mosdepth from qc as qc_mosdepth with:
@@ -399,7 +426,7 @@ use rule gatk_get_pileup_summaries from qc as qc_gatk_get_pileup_summaries with:
 
 module biomarker:
     snakefile:
-        get_module_snakefile(config, "hydra-genetics/biomarker", path="workflow/Snakefile", tag="v0.4.0")
+        get_module_snakefile(config, "hydra-genetics/biomarker", path="workflow/Snakefile", tag="v0.5.0")
     config:
         config
 
@@ -412,11 +439,33 @@ use rule cnvkit2scarhrd from biomarker as biomarker_cnvkit2scarhrd with:
         seg="cnv_sv/cnvkit_call_hrd/{sample}_{type}.{tc_method}.loh.cns",
 
 
+use rule msisensor_pro_filter_sites from biomarker as biomarker_msisensor_pro_filter_sites_unfiltered with:
+    output:
+        PoN=temp("biomarker/msisensor_pro_filter_sites/{sample}_{type}.Msisensor_pro_reference.unfiltered.list_baseline"),
+    params:
+        msi_sites_bed="",
+
+
+use rule msisensor_pro from biomarker as biomarker_msisensor_pro_unfiltered with:
+    input:
+        bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
+        bai="alignment/samtools_merge_bam/{sample}_{type}.bam.bai",
+        PoN="biomarker/msisensor_pro_filter_sites/{sample}_{type}.Msisensor_pro_reference.unfiltered.list_baseline",
+    output:
+        msi_score=temp("biomarker/msisensor_pro_unfiltered/{sample}_{type}"),
+        msi_all=temp("biomarker/msisensor_pro_unfiltered/{sample}_{type}_all"),
+        msi_dis=temp("biomarker/msisensor_pro_unfiltered/{sample}_{type}_dis"),
+        msi_unstable=temp("biomarker/msisensor_pro_unfiltered/{sample}_{type}_unstable"),
+    params:
+        extra=config.get("msisensor_pro", {}).get("extra", "-c 50 -b 2"),
+        out_prefix="biomarker/msisensor_pro_unfiltered/{sample}_{type}",
+
+
 use rule msisensor_pro from biomarker as biomarker_msisensor_pro_umi with:
     input:
         bam="alignment/bwa_mem_realign_consensus_reads/{sample}_{type}.umi.bam",
         bai="alignment/bwa_mem_realign_consensus_reads/{sample}_{type}.umi.bam.bai",
-        PoN=config.get("msisensor_pro", {}).get("PoN", ""),
+        PoN="biomarker/msisensor_pro_filter_sites/{sample}_{type}.Msisensor_pro_reference.filtered.list_baseline",
     output:
         msi_score=temp("biomarker/msisensor_pro/{sample}_{type}.umi"),
         msi_all=temp("biomarker/msisensor_pro/{sample}_{type}.umi_all"),
@@ -430,6 +479,13 @@ use rule msisensor_pro from biomarker as biomarker_msisensor_pro_umi with:
 use rule tmb from biomarker as biomarker_tmb with:
     input:
         vcf="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.hotspot_annotated.background_annotated.include.exon.filter.snv_hard_filter.vcf.gz",
+
+
+use rule optitype from biomarker as biomarker_optitype with:
+    output:
+        coverage_plot=temp("biomarker/optitype/{sample}_{type}/{sample}_{type}_hla_type_coverage_plot.pdf"),
+        hla_type=temp("biomarker/optitype/{sample}_{type}/{sample}_{type}_hla_type_result.tsv"),
+        out_dir=directory("biomarker/optitype/{sample}_{type}/"),
 
 
 use rule tmb from biomarker as biomarker_tmb_umi with:
@@ -457,7 +513,7 @@ use rule tmb from biomarker as biomarker_tmb_umi with:
 
 module fusions:
     snakefile:
-        get_module_snakefile(config, "hydra-genetics/fusions", path="workflow/Snakefile", tag="v0.1.0")
+        get_module_snakefile(config, "hydra-genetics/fusions", path="workflow/Snakefile", tag="v0.2.2")
     config:
         config
 
@@ -624,7 +680,7 @@ use rule purecn from cnv_sv as cnv_sv_purecn with:
 
 module reports:
     snakefile:
-        get_module_snakefile(config, "hydra-genetics/reports", path="workflow/Snakefile", tag="v0.5.0")
+        get_module_snakefile(config, "hydra-genetics/reports", path="workflow/Snakefile", tag="v0.6.0")
     config:
         config
 

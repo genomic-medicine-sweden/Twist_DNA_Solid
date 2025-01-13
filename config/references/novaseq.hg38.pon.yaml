@@ -50,7 +50,7 @@
 #      type: file
 #      url: https://figshare.com/ndownloader/files/49365301?private_link=88202740beb6fcbac09d
 
-#  msisensor_pro:
+#  msisensor_pro_filter_sites:
 #    PoN:
 #      checksum: 8b5ea989a5c617aaa1ab1f81ec525e8b
 #      path: GMS560/PoN/Msisensor_pro_reference_novaseq_13_hg38.list_baseline

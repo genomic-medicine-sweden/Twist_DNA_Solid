@@ -1,5 +1,6 @@
 output: "../../config/output_files.yaml"
 singularity_schema: "../../config/singularity.schema.yaml"
+general_report: "../../config/reports/general_report.yaml"
 
 annotate_cnv:
   cnv_amp_genes: "reference/cnv_amp_genes.bed"
@@ -129,7 +130,7 @@ manta_run_workflow_t:
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
 
-msisensor_pro:
+msisensor_pro_filter_sites:
   PoN: "DATA/msisensor_pro_reference_26_normal.list_baseline"
 
 multiqc:

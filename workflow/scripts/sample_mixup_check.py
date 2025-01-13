@@ -65,9 +65,9 @@ for rna_sample in rna_samples:
         if rna_samples[rna_sample][dna_sample] > best_gt_match:
             best_dna_sample = dna_sample
             best_gt_match = rna_samples[rna_sample][dna_sample]
-    p_match = round(best_gt_match / 42.0, 1)
+    p_match = round(best_gt_match * 100 / 42.0, 1)
     report.write(f"{rna_sample}\t{best_dna_sample}\t{best_gt_match}\t{p_match}%\t")
-    if p_match > match_cutoff:
+    if p_match > match_cutoff * 100:
         report.write(f"yes\n")
     else:
         report.write(f"no\n")

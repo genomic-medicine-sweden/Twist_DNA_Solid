@@ -170,7 +170,7 @@ CNV regions that overlap with clinically relevant genes for amplifications ([`cn
  </table>
 
 ## CNV filtering
-Filtering the CNV amplifications and deletions are performed by the [filtering hydra-genetics module](https://filtering.readthedocs.io/en/latest/).
+Filtering the CNV amplifications and deletions are performed by the [filtering hydra-genetics module](https://hydra-genetics-filtering.readthedocs.io/en/latest/).
 
 ### Amplification filtering
 Genes and filtering criteria specified in `config_hard_filter_cnv_amp.yaml` are listed below:
@@ -284,7 +284,7 @@ For more information, see the [hydra-genetics/reports documentation](https://hyd
 
 
 ## Germline vcf
-The germline vcf used by CNVkit, Jumble, and the CNV html report is based on the [VEP annotated vcf](dna_snv_indels.md#vep) file from the SNV and INDEL calling. Annotated vcfs are hard filtered first by removing black listed regions with noisy germline VAFs in normal samples and then filtered by a number of filtering criteria described below. See the [filtering hydra-genetics module](https://filtering.readthedocs.io/en/latest/) for additional information.
+The germline vcf used by CNVkit, Jumble, and the CNV html report is based on the [VEP annotated vcf](dna_snv_indels.md#vep) file from the SNV and INDEL calling. Annotated vcfs are hard filtered first by removing black listed regions with noisy germline VAFs in normal samples and then filtered by a number of filtering criteria described below. See the [filtering hydra-genetics module](https://hydra-genetics-filtering.readthedocs.io/en/latest/) for additional information.
 
 ### Exclude exonic regions
 Use **[bcftools filter -T](https://samtools.github.io/bcftools/bcftools.html)** v1.15 to exclude variants overlapping blacklisted regions defined in a bed file.
@@ -295,7 +295,7 @@ Use **[bcftools filter -T](https://samtools.github.io/bcftools/bcftools.html)** 
 * [Bed file](references.md#bcftools_filter_exclude_region) with blacklisted regions
 
 ### Filter vcf
-The germline vcf file are filtered using the **[hydra-genetics filtering](https://filtering.readthedocs.io/en/latest/)** functionality included in v0.15.0.
+The germline vcf file are filtered using the **[hydra-genetics filtering](https://hydra-genetics-filtering.readthedocs.io/en/latest/)** functionality included in v0.15.0.
 
 ### Configuration
 The filters are specified in the config file `config_hard_filter_germline.yaml` and consists of the following filters:

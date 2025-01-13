@@ -119,7 +119,7 @@ hotspot_report:
     ENC: "{{PROJECT_DESIGN_DATA}}/GMS560/reports/ENC_hotspots_240919_hg38.csv"
 
 # jumble_run:
-#   normal_reference: "{{PROJECT_DESIGN_DATA}}/GMS560/cnv/jumble/jumble.combined.filtered.50.PoN.hg19.RDS"
+#   normal_reference: "{{PROJECT_DESIGN_DATA}}/GMS560/PoN/jumble.combined.filtered.50.PoN.hg19.RDS"
 
 manta_config_t:
   extra: "--exome --callRegions {{PROJECT_DESIGN_DATA}}/GMS560/design/pool1_pool2.sort.merged.padded20.cnv200.hg38.split_fusion_genes.reannotated.230222.bed.gz"
@@ -133,8 +133,9 @@ merge_cnv_json:
 mosdepth:
   extra: "--no-per-base --fast-mode"
 
-msisensor_pro:
+msisensor_pro_filter_sites:
   PoN: "{{PROJECT_PON_DATA}}/GMS560/PoN/Msisensor_pro_reference_nextseq_noUmea_27_hg38.list_baseline"
+  #msi_sites_bed: "{{PROJECT_PON_DATA}}/GMS560/design/SelectedMSIloci2019Sorted.bed" #hg19
 
 purecn:
   extra: "--model betabin --mapping-bias-file {{PROJECT_PON_DATA}}/GMS560/PoN/purecn/mapping_bias_nextseq_hg38.rds"

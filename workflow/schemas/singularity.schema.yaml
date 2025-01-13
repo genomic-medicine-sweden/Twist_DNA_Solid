@@ -268,7 +268,7 @@ properties:
         type: string
         description: name or path to a default docker/singularity container
         pattern: >-
-            fred2/optitype$|fred2_optitype\.sif$
+            fred2/optitype:release-v1\.3\.1$|fred2_optitype_release-v1\.3\.1\.sif$
       required:
         - container
 
