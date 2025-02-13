@@ -3,7 +3,7 @@ subtitle: "Reference used: GRCh37"
 intro_text: "The MultiQC DNA report summarise analysis results from GMS560 panel data that been analysed by the Twist Solid pipeline (https://github.com/genomic-medicine-sweden/Twist_Solid)."
 
 report_header_info:
-  - Contact E-mail: "igp-klinsek-bioinfo@lists.uu.se"
+  - Contact E-mail: !ENV "${NAME:igp-klinsek-bioinfo}@${DOMAIN:lists.uu.se}"
   - Application Type: "Bioinformatic analysis of GMS560 panel for solid cancers"
 
 show_analysis_paths: True
