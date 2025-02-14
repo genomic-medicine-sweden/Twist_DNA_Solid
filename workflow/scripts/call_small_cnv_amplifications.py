@@ -7,6 +7,7 @@ log = logging.getLogger()
 
 def read_cnv_data(cnv_file_name, sample_name, region):
     probe_data = []
+    probe_positions = []
     gene_probe_index = []
     with open(cnv_file_name) as cnv_file:
         header = True
@@ -23,13 +24,14 @@ def read_cnv_data(cnv_file_name, sample_name, region):
             log2_copy_ratio = float(columns[3])
             if chrom == region[0] and ((start >= region[1] and start <= region[2]) or (end >= region[1] and end <= region[2])):
                 probe_data.append(log2_copy_ratio)
+                probe_positions.append([chrom, start, end])
                 if (
                     chrom == region[0] and
                     ((start >= region[3] and start <= region[4]) or (end >= region[3] and end <= region[4]))
                 ):
                     gene_probe_index.append(i)
                 i += 1
-    return probe_data, gene_probe_index
+    return probe_data, gene_probe_index, probe_positions
 
 
 def find_max_probe_diff(probe_data, window_size):
@@ -61,8 +63,8 @@ def find_max_probe_diff(probe_data, window_size):
 
 
 def filter_amplifications(
-        max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, region, amplifications,
-        region_max_size, window_size, min_log_odds_diff, min_nr_stdev_diff
+        max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, probe_positions, region,
+        amplifications, region_max_size, window_size, min_log_odds_diff, min_nr_stdev_diff
 ):
     # Filter deletions
     if max_probe_diff_index <= min_probe_diff_index:
@@ -82,7 +84,9 @@ def filter_amplifications(
     if not in_gene:
         return "Not_in_gene"
     # Filter too short amplifications
-    high_probes = probe_data[min_probe_diff_index + window_size + 1:max_probe_diff_index + window_size]
+    high_probes_i_start = min_probe_diff_index + window_size + 1
+    high_probes_i_stop = max_probe_diff_index + window_size
+    high_probes = probe_data[high_probes_i_start:high_probes_i_stop]
     if len(high_probes) < window_size:
         return "Too_small"
     # Calculate low probes window averages
@@ -115,7 +119,9 @@ def filter_amplifications(
         return "Low_nr_std_diff"
     median_diff = median_high - median_low
     nr_std_diff = abs(median_diff) / stdev_low
-    amplifications.write(f"{region[5]}\t{region[0]}\t{region[3]}\t{region[4]}")
+    start_pos = probe_positions[high_probes_i_start][1]
+    end_pos = probe_positions[high_probes_i_stop - 1][2]
+    amplifications.write(f"{region[5]}\t{region[0]}\t{start_pos}\t{end_pos}")
     amplifications.write(f"\t{median_diff}\t{median_high}\t{median_low}\t{len(high_probes)}\t{nr_std_diff}\n")
     return "Unfiltered"
 
@@ -143,15 +149,15 @@ def call_small_cnv_amplifications(
     amplifications.write("Gene(s)\tChromosome\tGene_start\tGene_end\tLog2_ratio_diff\tMedian_L2R_amplification\t")
     amplifications.write("Median_L2R_surrounding\tNumber_of_data_points\tNumber_of_stdev\n")
     for region in regions:
-        probe_data, gene_probe_index = read_cnv_data(cnv_file_name, sample_name, region)
+        probe_data, gene_probe_index, probe_positions = read_cnv_data(cnv_file_name, sample_name, region)
         # Warning about to small region
         # 1 window for Amplifications and one window plus 3 for high probes (for statistics) plus 2 spaces between windows)
         if len(probe_data) < window_size * 2 + 3 + 2:
             log.info(f"Too few data points for region: {region}")
         max_probe_diff_index, min_probe_diff_index = find_max_probe_diff(probe_data, window_size)
         filter = filter_amplifications(
-            max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, region, amplifications, region_max_size,
-            window_size, min_log_odds_diff, min_nr_stdev_diff,
+            max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, probe_positions, region,
+            amplifications, region_max_size, window_size, min_log_odds_diff, min_nr_stdev_diff,
         )
     return filter
 

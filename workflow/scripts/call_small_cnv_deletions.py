@@ -7,6 +7,7 @@ log = logging.getLogger()
 
 def read_cnv_data(cnv_file_name, sample_name, region):
     probe_data = []
+    probe_positions = []
     gene_probe_index = []
     with open(cnv_file_name) as cnv_file:
         header = True
@@ -23,13 +24,14 @@ def read_cnv_data(cnv_file_name, sample_name, region):
             log2_copy_ratio = float(columns[3])
             if chrom == region[0] and ((start >= region[1] and start <= region[2]) or (end >= region[1] and end <= region[2])):
                 probe_data.append(log2_copy_ratio)
+                probe_positions.append([chrom, start, end])
                 if (
                     chrom == region[0] and
                     ((start >= region[3] and start <= region[4]) or (end >= region[3] and end <= region[4]))
                 ):
                     gene_probe_index.append(i)
                 i += 1
-    return probe_data, gene_probe_index
+    return probe_data, gene_probe_index, probe_positions
 
 
 def find_max_probe_diff(probe_data, window_size):
@@ -61,8 +63,8 @@ def find_max_probe_diff(probe_data, window_size):
 
 
 def filter_deletions(
-        max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, region, deletions, region_max_size, window_size,
-        min_log_odds_diff, min_nr_stdev_diff, blacklist_dict,
+        max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, probe_positions, region, deletions,
+        region_max_size, window_size, min_log_odds_diff, min_nr_stdev_diff, blacklist_dict,
 ):
     # Blacklist filter
     key = f"{region[0]}_{region[3]}_{region[4]}"
@@ -86,7 +88,9 @@ def filter_deletions(
     if not in_gene:
         return "Not_in_gene"
     # Filter too short deletions
-    low_probes = probe_data[max_probe_diff_index + window_size + 1:min_probe_diff_index + window_size]
+    low_probes_i_start = max_probe_diff_index + window_size + 1
+    low_probes_i_stop = min_probe_diff_index + window_size
+    low_probes = probe_data[low_probes_i_start:low_probes_i_stop]
     if len(low_probes) < window_size:
         return "Too_small"
     # Calculate high probes window averages
@@ -120,7 +124,9 @@ def filter_deletions(
         return "Low_nr_std_diff"
     median_diff = median_low - median_high
     nr_std_diff = abs(median_diff) / stdev_high
-    deletions.write(f"{region[5]}\t{region[0]}\t{region[3]}\t{region[4]}")
+    start_pos = probe_positions[low_probes_i_start][1]
+    end_pos = probe_positions[low_probes_i_stop - 1][2]
+    deletions.write(f"{region[5]}\t{region[0]}\t{start_pos}\t{end_pos}")
     deletions.write(f"\t{median_diff}\t{median_low}\t{median_high}\t{len(low_probes)}\t{nr_std_diff}\n")
     return "Unfiltered"
 
@@ -158,18 +164,18 @@ def call_small_cnv_deletions(
     regions = read_regions_data(regions_file)
     blacklist_dict = read_blacklist(blacklist_file_name)
     sample_name = cnv_file_name.split("/")[1].split("_")[0]
-    deletions.write("Gene(s)\tChromosome\tGene_start\tGene_end\tLog2_ratio_diff\tMedian_L2R_deletion\t")
+    deletions.write("Gene(s)\tChromosome\tDeletion_start\tDeletion_end\tLog2_ratio_diff\tMedian_L2R_deletion\t")
     deletions.write("Median_L2R_surrounding\tNumber_of_data_points\tNumber_of_stdev\n")
     for region in regions:
-        probe_data, gene_probe_index = read_cnv_data(cnv_file_name, sample_name, region)
+        probe_data, gene_probe_index, probe_positions = read_cnv_data(cnv_file_name, sample_name, region)
         # Warning about to small region
         # 1 window for deletions and one window plus 3 for high probes (for statistics) plus 2 spaces between windows)
         if len(probe_data) < window_size * 2 + 3 + 2:
             log.info(f"Too few data points for region: {region}")
         max_probe_diff_index, min_probe_diff_index = find_max_probe_diff(probe_data, window_size)
         filter = filter_deletions(
-            max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, region, deletions, region_max_size,
-            window_size, min_log_odds_diff, min_nr_stdev_diff, blacklist_dict
+            max_probe_diff_index, min_probe_diff_index, probe_data, gene_probe_index, probe_positions, region,
+            deletions, region_max_size, window_size, min_log_odds_diff, min_nr_stdev_diff, blacklist_dict
         )
     return filter
 
